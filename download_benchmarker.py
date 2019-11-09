@@ -14,11 +14,3 @@ def benchmark_individual_download(file_name, parent_path, s3_region, bucket_name
     )
 
 
-benchmark_individual_download(
-    "test100kb",
-    "dump/",
-    "us-west-2",
-    "benchmarking-hao"
-)
-
-

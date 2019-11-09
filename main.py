@@ -33,7 +33,7 @@ def benchmark():
             logging.info("Downloading file {} from S3 in region {}: {}s".format(
                 file_name,
                 region,
-                benchmark_individual_download(file_name, DATA_PARENT_PATH, region, benchmark_configuration["bucket"])
+                benchmark_individual_download(file_name, DUMP_PATH, region, benchmark_configuration["bucket"])
             ))
     logging.info("--- End of benchmarking ---")
 

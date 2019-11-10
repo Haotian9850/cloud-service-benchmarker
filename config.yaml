@@ -16,6 +16,8 @@ regions:
   - us-west-1
 file_size_kb:
   - 1
-  - 5
-  - 10
+  - 128
+  - 256
+  - 512
+  - 1024
 num_clients: 5

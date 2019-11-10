@@ -14,7 +14,14 @@ Default output format [None]: json
 ### Configure benchmarker
 Add desired benchmarking configurations to `config.yaml` as follow:
 ```
-bucket: YOUR_BUCKET_NAME
+buckets: 
+  - hao-us-east-1
+  - hao-ap-southeast-2
+  - hao-ap-northeast-1
+  - hao-eu-west-2
+  - hao-sa-east-1
+  - hao-ca-central-1
+  - ...
 regions:
   - us-east-1
   - ap-southeast-2
@@ -25,28 +32,22 @@ regions:
   - ...
 file_size_kb:
   - 1
-  - 10 
-  - 100
-  - 1024
+  - 128
+  - 256
+  - 512
   - ...
+num_clients: 5
 ```
+- *Note that all `buckets` must be created before benchmarking and match the order of region in `regions`*
+- *`num_clients`: number of client you wish to open concurrently to download from a certain AWS S3 bucket*
 
 ### Start benchmarking
 Run the following Bash command inside project root to start benchmarking:
 ```
-$ python3 main.py
+$ python3 benchmarker_multi_client.py
 ```
-Benchmarking result will be logged to `benchmarker_log.log`. Below is sample benchmarking result log:
+A multi-region, multi-file-size download latency plot of benchmarking results will show after benchmarking is finished. Below is a sample plot:
 
-```
-INFO:root:Reading config file...
-INFO:root:--- Beginning of benchmarking ---
-INFO:root:Uploading file test1kb to S3 in region us-east-1: 1.056934901999739s
-INFO:root:Downloading file test1kb from S3 in region us-east-1: 1.09172542899978s
-...
-INFO:root:Uploading file test1kb to S3 in region ca-central-1: 1.0340208799998436s
-...
-INFO:root:--- End of benchmarking ---
-```
+![alt](benchmark_score.png)
 
 

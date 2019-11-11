@@ -15,9 +15,5 @@ regions:
   - ca-central-1
   - us-west-1
 file_size_kb:
-  - 1
-  - 128
-  - 256
-  - 512
   - 1024
-num_clients: 5
+num_clients: 20

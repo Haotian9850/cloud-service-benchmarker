@@ -13,3 +13,8 @@ class ConfigReader():
             result = yaml.safe_load(config)
         return result
 
+
+if __name__ == "__main__":
+    c = ConfigReader("./config.yaml")
+    print(c.read_config())
+

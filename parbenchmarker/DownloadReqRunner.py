@@ -11,10 +11,11 @@ class DownloadReqRunner():
         os.system("aws s3 cp s3://{}/{} {}/{}".format(
             bucket_name,
             file_name,
-            dump_path
+            dump_path,
+            file_name
         ))
-        return time.perf_counter() - start_time()
-        
+        return time.perf_counter() - start_time
+
 
         
 

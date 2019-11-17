@@ -11,13 +11,15 @@ CONFIG_PATH = "./config.yaml"
 TEST_FILE_PREDIX = "test"
 TEST_FILE_PARENT_PATH = "data"
 DUMP_PATH = "dump"
+RESULT_CSV = "results.csv"
 
 
-def download_benchmarking_job(bucket, file_name, dump_path):
+def download_benchmarking_job(bucket, file_name, dump_path, csv_name):
     print(DownloadReqRunner().benchmark_download(
         bucket,
         file_name,
-        dump_path
+        dump_path,
+        csv_name
     ))
 
 def upload_test_file(bucket, file_name, parent_path):
@@ -48,7 +50,8 @@ if __name__ == "__main__":
             download_benchmarking_job,
             bucket=config["buckets"][i],
             file_name=test_file,
-            dump_path=DUMP_PATH
+            dump_path=DUMP_PATH,
+            csv_name=RESULT_CSV
         )
     while True:
         schedule.run_pending()

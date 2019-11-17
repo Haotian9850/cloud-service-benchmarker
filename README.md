@@ -86,7 +86,6 @@ Run the following Bash command inside project root to start benchmarking:
 ```
 $ python3 benchmarker_multi_client.py
 ```
-A multi-region, multi-file-size download latency plot of benchmarking results will show after benchmarking is finished. Below is a sample plot:
 
 
 

@@ -1,5 +1,11 @@
-# Benchmarking cloud storage services
-## S3
+# Cloud storage service benchmarker
+## S3 (parallel, multi-machine)
+
+
+
+
+
+## S3 (sequential, single-machine)
 ### Configure aws-cli
 Run the following Bash command to set up `aws` environment variables
 
@@ -48,6 +54,5 @@ $ python3 benchmarker_multi_client.py
 ```
 A multi-region, multi-file-size download latency plot of benchmarking results will show after benchmarking is finished. Below is a sample plot:
 
-![alt](benchmark_score.png)
 
 

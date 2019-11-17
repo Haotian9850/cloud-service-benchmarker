@@ -45,12 +45,17 @@ req_times:
 ```
 *Note that `req_times` must have a one-to-one mapping to `buckets`* 
 #### Start benchmarking
+Run the following command to start benchmarker:
+```
+$ python3 main.py
+```
+Benchmark results will be stored in `results.csv`
 
 
 
 
 
-### Sequential benchmarking
+### Sequential benchmarking (deprecated)
 #### Configure benchmarker
 Add desired benchmarking configurations to `config.yaml` as follow:
 ```

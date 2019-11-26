@@ -1,3 +1,6 @@
+Constants.py 
+Constants.*
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

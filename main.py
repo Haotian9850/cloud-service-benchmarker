@@ -16,15 +16,8 @@ def upload_source_code(host_name, port, username):
     ))
 
 
-
-
 if __name__ == "__main__":
     for i in range(len(Constants.NODE_HOSTS.value)):
-        upload_source_code(
-            Constants.NODE_HOSTS.value[i],
-            Constants.NODE_PORTS.value[i],
-            Constants.USERNAME.value
-        )
         r = RemoteBenchMarker(
             Constants.NODE_HOSTS.value[i],
             Constants.NODE_PORTS.value[i],
@@ -32,7 +25,14 @@ if __name__ == "__main__":
             "/home/haotian/.ssh/id_geni_ssh_rsa",
             "123456"
         )
+        r.exec_command(["rm -r /users/hl7gr/parbenchmarker"])
+        upload_source_code(
+            Constants.NODE_HOSTS.value[i],
+            Constants.NODE_PORTS.value[i],
+            Constants.USERNAME.value
+        )
         r.exec_command([
+            "sudo pkill python3",
             "sudo chmod +x /users/{}/parbenchmarker/main.py".format(Constants.USERNAME.value),
             "sudo nohup python3 -u /users/{}/parbenchmarker/main.py > nohup.out 2>&1 &".format(Constants.USERNAME.value)
         ])

@@ -14,8 +14,6 @@ if __name__ == "__main__":
             "123456"
         )
         r.exec_command([
-            "rm -r /users/hl7gr/parbenchmarker",
-            "sudo pkill python3",
             "sudo apt-get update",
             "sudo apt-get install awscli -y",
             "aws configure set aws_access_key_id {}".format(Constants.AWS_ACCESS_KEY.value),

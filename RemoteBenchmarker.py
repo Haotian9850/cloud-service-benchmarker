@@ -1,5 +1,6 @@
 import paramiko
 from paramiko import SSHClient
+from datetime import datetime
 
 class RemoteBenchMarker():
     host_name = ""
@@ -32,7 +33,7 @@ class RemoteBenchMarker():
         for command in commands:      
             stdin, stdout, stderr = self.client.exec_command(command)
             exit_status = stdout.channel.recv_exit_status()
-            print("{} : {}".format(exit_status, command))
+            print("{} : {} finished at {}".format(exit_status, command, datetime.now()))
 
 
     def close_client(self):

@@ -55,7 +55,11 @@ if __name__ == "__main__":
             "sudo apt-get update",
             "sudo apt-get install awscli -y",
             "aws configure set aws_access_key_id {}".format(Constants.AWS_ACCESS_KEY.value),
-            "aws configure set aws_secret_access_key {}".format(Constants.AWS_SECRET_KEY.value)
+            "aws configure set aws_secret_access_key {}".format(Constants.AWS_SECRET_KEY.value),
+            "sudo apt-get install python3-pip -y",
+            "sudo pip3 install --upgrade pip",
+            "sudo pip3 install schedule",
+            "sudo pip3 install pyyaml"
         ])
         r.exec_command(["python3 parbenchmarker/main.py &"]) # start benchmarking in detached mode
         r.close_client()

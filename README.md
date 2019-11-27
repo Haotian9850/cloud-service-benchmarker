@@ -1,18 +1,8 @@
 # Cloud storage service benchmarker
 ## S3
-### Configure aws-cli
-Run the following Bash command to set up `aws` environment variables
-
-```
-$ aws configure
-AWS Access Key ID [None]: YOUR_ACCESS_KEY
-AWS Secret Access Key [None]: YOUR_SECRET_KEY
-Default region name [None]: YOUR_DEFAULT_REGION
-Default output format [None]: json
-```
-### Parallel benchmarking
+### Concurrent multi-client benchmarking
 #### Configure benchmarker
-Add config to `config.yaml` as follow:
+Add config to `config.yaml` to `parbenchmarker/`as follow:
 ```
 buckets: 
   - hao-us-east-1
@@ -43,13 +33,48 @@ req_times:
   - "19:03:50"
   - "19:03:00"
 ```
-*Note that `req_times` must have a one-to-one mapping to `buckets`* 
-#### Start benchmarking
-Run the following command to start benchmarker:
+*Note that `req_times` must have a one-to-one mapping to `buckets` and are not timezone sensitive.*
+
+#### Provision remote VMs
+Put sensitive config info in `Constants.py` in the following format:
+```
+from enum import Enum 
+
+class Constants(Enum):
+    AWS_ACCESS_KEY = "XXXXXXXXXXXXXXXXXXXX"
+    AWS_SECRET_KEY = "XXXXXXXXXXXXXXXXXXXX"
+
+    USERNAME = "hl7gr"  # your VM username
+    NODE_HOSTS = [
+        "pc603.emulab.net",
+        ...
+    ]
+    NODE_PORTS = [
+        26402,
+        ...
+    ]
+```
+Run the following command to provision remote VMs:
+```
+$ python3 setup.py
+```
+Enter key passphrase when prompted
+
+#### Start benchmarking on remote VMs
+After setting times (relative to **local time** of remote VMs' region!) in `config.yaml`, run the following command to upload source code and start benchmarking:
 ```
 $ python3 main.py
 ```
-Benchmark results will be stored in `results.csv`
+
+### Collect benchmarking results
+After all clients have finished benchmarking, run the following command to retrieve benchmarking results:
+```
+$ python3 collect_results.py
+```
+Enter key passphrase when prompted
+
+Benchmarking results will be stored under `results/`
+
 
 
 

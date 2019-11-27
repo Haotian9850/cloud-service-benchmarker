@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import schedule
 import time
 import os
@@ -7,11 +9,13 @@ from FileMaker import FileMaker
 from ConfigReader import ConfigReader
 from DownloadReqRunner import DownloadReqRunner
 
-CONFIG_PATH = "./config.yaml"
+USERNAME = "hl7gr"
+
+CONFIG_PATH = "/users/{}/parbenchmarker/config.yaml".format(USERNAME)
 TEST_FILE_PREDIX = "test"
-TEST_FILE_PARENT_PATH = "data"
-DUMP_PATH = "dump"
-RESULT_CSV = "results.csv"
+TEST_FILE_PARENT_PATH = "/users/{}/parbenchmarker/data".format(USERNAME)
+DUMP_PATH = "/users/{}/parbenchmarker/dump".format(USERNAME)
+RESULT_CSV = "/users/{}/parbenchmarker/results.csv".format(USERNAME)
 
 
 def download_benchmarking_job(bucket, file_name, dump_path, csv_name):

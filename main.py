@@ -34,7 +34,9 @@ if __name__ == "__main__":
         r.exec_command([
             "sudo pkill python3",
             "sudo chmod +x /users/{}/parbenchmarker/main.py".format(Constants.USERNAME.value),
-            "sudo nohup python3 -u /users/{}/parbenchmarker/main.py > nohup.out 2>&1 &".format(Constants.USERNAME.value)
+            "sudo nohup python3 -u /users/{}/parbenchmarker/main.py > nohup.out 2>&1 &".format(Constants.USERNAME.value),
+            "aws configure set aws_access_key_id {}".format(Constants.AWS_ACCESS_KEY.value),
+            "aws configure set aws_secret_access_key {}".format(Constants.AWS_SECRET_KEY.value)
         ])
         r.close_client()
     

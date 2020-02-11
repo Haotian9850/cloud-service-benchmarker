@@ -14,9 +14,9 @@ regions:
   - sa-east-1
   - ca-central-1
   - us-west-1
-file_size_kb: 65536
+file_size_kb: 131072
 username: hl7gr
-start_time: "00:10:00"
-gap_sec: 60
+start_time: "14:58:00"
+gap_sec: 180
 
 

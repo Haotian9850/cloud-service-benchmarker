@@ -14,14 +14,19 @@ regions:
   - sa-east-1
   - ca-central-1
   - us-west-1
-file_size_kb: 64
+file_size_kb: 1
 username: hl7gr
-req_times:
-  - "12:05:00"
-  - "12:05:20"
-  - "12:05:40"
-  - "12:06:00"
-  - "12:06:20"
-  - "12:06:40"
-  - "12:06:00"
+
+multi_local_clients: True 
+num_local_clients: 5
+
+start_time: "01:12:00"
+gap_sec: 10
+
+between_req_sec: 0.2
+
+
+
+
+
 

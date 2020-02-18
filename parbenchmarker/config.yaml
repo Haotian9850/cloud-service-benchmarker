@@ -16,7 +16,15 @@ regions:
   - us-west-1
 file_size_kb: 131072
 username: hl7gr
+
+multi_local_clients: True 
+num_local_clients: 5
+
 start_time: "14:58:00"
 gap_sec: 180
+
+
+
+
 
 

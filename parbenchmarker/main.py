@@ -20,7 +20,7 @@ RESULT_CSV = "/users/{}/parbenchmarker/results.csv".format(USERNAME)
 
 
 def download_benchmarking_job(bucket, file_name, dump_path, csv_name):
-    print(DownloadReqRunner().benchmark_download(
+    print(DownloadReqRunner().benchmark_download_job(
         bucket,
         file_name,
         dump_path,

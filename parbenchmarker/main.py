@@ -4,6 +4,7 @@ import schedule
 import time
 import os
 import datetime
+import logging, logging.config
 
 
 from FileMaker import FileMaker
@@ -12,12 +13,45 @@ from DownloadReqRunner import DownloadReqRunner
 
 USERNAME = "hl7gr"
 
+'''
 CONFIG_PATH = "/users/{}/parbenchmarker/config.yaml".format(USERNAME)
-TEST_FILE_PREDIX = "test"
+TEST_FILE_PREFIX = "test"
 TEST_FILE_PARENT_PATH = "/users/{}/parbenchmarker/data".format(USERNAME)
 DUMP_PATH = "/users/{}/parbenchmarker/dump".format(USERNAME)
 RESULT_CSV = "/users/{}/parbenchmarker/results.csv".format(USERNAME)
+'''
+CONFIG_PATH = "./config.yaml"
+TEST_FILE_PREFIX = "test"
+TEST_FILE_PARENT_PATH = "./data"
+DUMP_PATH = "./dump"
+RESULT_CSV = "./results.csv"
 
+
+LOGGING_CONFIG = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "[{levelname} {asctime}]    {module} {message}",
+            "style": "{",
+        }
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "level": "INFO",
+            "formatter": "verbose"
+            }
+        },
+        "loggers": {
+            "": {
+                "handlers": ["console"],
+                "level": "INFO"
+            }
+        }
+    }
+
+logging.config.dictConfig(LOGGING_CONFIG)
 
 def download_benchmarking_job(bucket, file_name, dump_path, csv_name):
     print(DownloadReqRunner().benchmark_download_job(
@@ -55,17 +89,29 @@ if __name__ == "__main__":
     config = reader.read_config()
     test_file = maker.make_test_file(
         config["file_size_kb"],
-        TEST_FILE_PREDIX,
+        TEST_FILE_PREFIX,
         TEST_FILE_PARENT_PATH,
     )
     for bucket in config["buckets"]:
+        logging.info("Uploading test file {} to bucket {}...".format(test_file, bucket))
         upload_test_file(bucket, test_file, TEST_FILE_PARENT_PATH)
     req_times = generate_job_times(config["start_time"], len(config["buckets"]), config["gap_sec"])
     for i in range(len(config["buckets"])):
-        print(config["buckets"][i])
+        logging.info("Benchmarking bucket {} with test file size {} kb...".format(config["buckets"][i], config["file_size_kb"]))
+        if config["multi_local_clients"]:
+            schedule.every().day.at(req_times[i]).do(
+                runner.benchmark_download_multiple_clients,
+                bucket_name=config["buckets"][i],
+                file_name=test_file,
+                dump_path=DUMP_PATH,
+                csv_name=RESULT_CSV,
+                num_client=config["num_local_clients"],
+                gap_sec=config["between_req_sec"],
+                job_callable=runner.benchmark_download_job
+            )
         schedule.every().day.at(req_times[i]).do(
-            download_benchmarking_job,
-            bucket=config["buckets"][i],
+            runner.benchmark_download_job,
+            bucket_name=config["buckets"][i],
             file_name=test_file,
             dump_path=DUMP_PATH,
             csv_name=RESULT_CSV

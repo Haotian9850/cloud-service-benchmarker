@@ -61,6 +61,20 @@ def download_benchmarking_job(bucket, file_name, dump_path, csv_name):
         csv_name
     ))
 
+def download_benchmarking_job_multiple_local_clients(req_times, bucket, file_name, dump_path, csv_name, num_client, between_req, multi_client_runner, single_client_runner):
+    for req_time in req_times:
+        schedule.every().day.at(req_time).do(
+            multi_client_runner.benchmark_download_multiple_clients,
+            bucket_name=bucket,
+            file_name=file_name,
+            dump_path=dump_path,
+            csv_name=csv_name,
+            num_client=num_client,
+            gap_sec=between_req,
+            job_callable=single_client_runner.benchmark_download_job
+        )
+
+
 def upload_test_file(bucket, file_name, parent_path):
     os.system("aws s3 cp {}/{} s3://{}/".format(
         parent_path,
@@ -78,6 +92,15 @@ def generate_job_times(start_time, num_buckets, gap_sec):
         i += 1
     return result
 
+def generate_job_times_multi_local_clients(start_time, total_duration, num_buckets, between_bucket):
+    result = list()
+    result.append(start_time)
+    start = datetime.datetime.strptime(start_time, "%H:%M:%S")
+    for _ in range(int(total_duration / (num_buckets * between_bucket))):
+        start = start + datetime.timedelta(0, num_buckets * between_bucket) * 2
+        result.append(datetime.datetime.strftime(start, "%H:%M:%S"))
+    return result
+
 
 
 
@@ -92,33 +115,40 @@ if __name__ == "__main__":
         TEST_FILE_PREFIX,
         TEST_FILE_PARENT_PATH,
     )
+    '''
     for bucket in config["buckets"]:
         logging.info("Uploading test file {} to bucket {}...".format(test_file, bucket))
         upload_test_file(bucket, test_file, TEST_FILE_PARENT_PATH)
-    req_times = generate_job_times(config["start_time"], len(config["buckets"]), config["gap_sec"])
-    for i in range(len(config["buckets"])):
-        logging.info("Benchmarking bucket {} with test file size {} kb...".format(config["buckets"][i], config["file_size_kb"]))
-        if config["multi_local_clients"]:
+    '''
+    if not config["multi_local_clients"]:
+        req_times = generate_job_times(config["start_time"], len(config["buckets"]), config["gap_sec"])
+        for i in range(len(config["buckets"])):
+            logging.info("Benchmarking bucket {} with test file size {} kb...".format(
+                config["buckets"][i],
+                config["file_size_kb"]
+            ))
             schedule.every().day.at(req_times[i]).do(
-                runner.benchmark_download_multiple_clients,
+                runner.benchmark_download_job,
                 bucket_name=config["buckets"][i],
                 file_name=test_file,
                 dump_path=DUMP_PATH,
-                csv_name=RESULT_CSV,
-                num_client=config["num_local_clients"],
-                gap_sec=config["between_req_sec"],
-                job_callable=runner.benchmark_download_job
+                csv_name=RESULT_CSV
             )
-        schedule.every().day.at(req_times[i]).do(
-            runner.benchmark_download_job,
-            bucket_name=config["buckets"][i],
-            file_name=test_file,
-            dump_path=DUMP_PATH,
-            csv_name=RESULT_CSV
+    else:
+        # multi local client close-call, single / multiple buckets
+        # one VM only -> can use sleep
+        req_times_multiple_local_clients = generate_job_times_multi_local_clients(
+            config["start_time"],
+            config["total_benchmarking_duration_sec"],
+            len(config["buckets"]),
+            config["between_bucket_sec"]
         )
+        print(req_times_multiple_local_clients)
+        # TODO: call schedule job here
+        
     while True:
         schedule.run_pending()
-        
+
     
 
 

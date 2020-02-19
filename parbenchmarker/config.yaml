@@ -24,6 +24,8 @@ start_time: "01:12:00"
 gap_sec: 10
 
 between_req_sec: 0.2
+between_bucket_sec: 5
+total_benchmarking_duration_sec: 7200
 
 
 

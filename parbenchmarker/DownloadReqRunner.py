@@ -53,23 +53,6 @@ class DownloadReqRunner():
         return result
 
 
-'''
-if __name__ == "__main__":
-    d = DownloadReqRunner()
-    result = d.benchmark_download_multiple_clients(
-        bucket_name="hao-us-east-1",
-        file_name="test1kb",
-        dump_path="./dump",
-        csv_name="./results.csv",
-        num_client=5,
-        gap_sec=0.2,
-        job_callable=d.benchmark_download_job
-    )
-    print(result)
-'''
-
-
-
 
         
 

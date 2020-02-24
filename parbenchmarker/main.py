@@ -10,9 +10,9 @@ import logging, logging.config
 from FileMaker import FileMaker
 from ConfigReader import ConfigReader
 from DownloadReqRunner import DownloadReqRunner
+from ResultWriter import ResultWriter
 
 USERNAME = "hl7gr"
-
 
 CONFIG_PATH = "/users/{}/parbenchmarker/config.yaml".format(USERNAME)
 TEST_FILE_PREFIX = "test"
@@ -120,11 +120,6 @@ if __name__ == "__main__":
         TEST_FILE_PREFIX,
         TEST_FILE_PARENT_PATH,
     )
-    '''
-    for bucket in config["buckets"]:
-        logging.info("Uploading test file {} to bucket {}...".format(test_file, bucket))
-        upload_test_file(bucket, test_file, TEST_FILE_PARENT_PATH)
-    '''
     if not config["multi_local_clients"]:
         req_times = generate_job_times(config["start_time"], len(config["buckets"]), config["gap_sec"])
         for i in range(len(config["buckets"])):
@@ -147,6 +142,14 @@ if __name__ == "__main__":
             config["total_benchmarking_duration_sec"],
             len(config["buckets"]),
             config["between_bucket_sec"]
+        )
+        ResultWriter().log_config(
+            config["num_local_clients"],
+            config["file_size_kb"],
+            config["between_req_sec"],
+            config["between_bucket_sec"],
+            config["gap_sec"],
+            RESULT_CSV
         )
         print(req_times_multiple_local_clients)
         # TODO: call schedule job here

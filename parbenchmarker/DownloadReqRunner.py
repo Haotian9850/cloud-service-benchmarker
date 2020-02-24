@@ -1,5 +1,6 @@
 import os
 import time 
+from datetime import datetime
 import logging
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
@@ -27,7 +28,7 @@ class DownloadReqRunner():
             file_name
         ))
         result = time.perf_counter() - start_time
-        self.result_writer.log_result(bucket_name, result, csv_name)
+        self.result_writer.log_result(bucket_name, result, csv_name, datetime.now())
         return result
 
 

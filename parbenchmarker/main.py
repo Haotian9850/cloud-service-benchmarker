@@ -13,7 +13,7 @@ from DownloadReqRunner import DownloadReqRunner
 
 USERNAME = "hl7gr"
 
-'''
+
 CONFIG_PATH = "/users/{}/parbenchmarker/config.yaml".format(USERNAME)
 TEST_FILE_PREFIX = "test"
 TEST_FILE_PARENT_PATH = "/users/{}/parbenchmarker/data".format(USERNAME)
@@ -25,6 +25,7 @@ TEST_FILE_PREFIX = "test"
 TEST_FILE_PARENT_PATH = "./data"
 DUMP_PATH = "./dump"
 RESULT_CSV = "./results.csv"
+'''
 
 
 LOGGING_CONFIG = {
@@ -61,18 +62,22 @@ def download_benchmarking_job(bucket, file_name, dump_path, csv_name):
         csv_name
     ))
 
-def download_benchmarking_job_multiple_local_clients(req_times, bucket, file_name, dump_path, csv_name, num_client, between_req, multi_client_runner, single_client_runner):
-    for req_time in req_times:
-        schedule.every().day.at(req_time).do(
-            multi_client_runner.benchmark_download_multiple_clients,
+
+#execute benchmarking for all buckets one time with multiple threads
+def download_benchmarking_job_multiple_local_clients(buckets, file_name, dump_path, csv_name, num_client, between_req_sec, between_bucket_sec):
+    runner = DownloadReqRunner()
+    for bucket in buckets:
+        runner.benchmark_download_multiple_clients(
             bucket_name=bucket,
             file_name=file_name,
             dump_path=dump_path,
             csv_name=csv_name,
             num_client=num_client,
-            gap_sec=between_req,
-            job_callable=single_client_runner.benchmark_download_job
+            gap_sec=between_req_sec,
+            job_callable=runner.benchmark_download_job
         )
+        time.sleep(int(between_bucket_sec))
+    
 
 
 def upload_test_file(bucket, file_name, parent_path):
@@ -145,6 +150,17 @@ if __name__ == "__main__":
         )
         print(req_times_multiple_local_clients)
         # TODO: call schedule job here
+        for job_time in req_times_multiple_local_clients:
+            schedule.every().day.at(job_time).do(
+                download_benchmarking_job_multiple_local_clients,
+                buckets=config["buckets"],
+                file_name=test_file,
+                dump_path=DUMP_PATH,
+                csv_name=RESULT_CSV,
+                num_client=config["num_local_clients"],
+                between_req_sec=config["between_req_sec"],
+                between_bucket_sec=config["between_bucket_sec"]
+            )
         
     while True:
         schedule.run_pending()

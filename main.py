@@ -7,7 +7,7 @@ from Constants import Constants
 
 def upload_source_code(host_name, port, username):
     print("-------------- uploading source code for host {} --------------".format(host_name))
-    os.system("scp -P {} -i ~/.ssh/id_geni_ssh_rsa -r {} {}@{}:/users/{}".format(
+    os.system("sudo scp -P {} -i ~/.ssh/id_geni_ssh_rsa -r {} {}@{}:/users/{}".format(
         port,
         "parbenchmarker",
         username,

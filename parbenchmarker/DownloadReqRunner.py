@@ -1,5 +1,6 @@
 import os
 import time 
+from datetime import datetime
 import logging
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
@@ -27,7 +28,7 @@ class DownloadReqRunner():
             file_name
         ))
         result = time.perf_counter() - start_time
-        self.result_writer.log_result(bucket_name, result, csv_name)
+        self.result_writer.log_result(bucket_name, result, csv_name, datetime.now())
         return result
 
 
@@ -50,23 +51,6 @@ class DownloadReqRunner():
                 self.logger.info("Task completed: {}".format(future.result()))
                 result.append(future.result())
         return result
-
-
-'''
-if __name__ == "__main__":
-    d = DownloadReqRunner()
-    result = d.benchmark_download_multiple_clients(
-        bucket_name="hao-us-east-1",
-        file_name="test1kb",
-        dump_path="./dump",
-        csv_name="./results.csv",
-        num_client=5,
-        gap_sec=0.2,
-        job_callable=d.benchmark_download_job
-    )
-    print(result)
-'''
-
 
 
 

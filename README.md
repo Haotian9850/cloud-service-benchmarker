@@ -41,6 +41,7 @@ Put sensitive config info in `Constants.py` in the following format:
 from enum import Enum 
 
 class Constants(Enum):
+    BENCHMARKING_MULTIPLE_LOCAL_CLIENTS = True
     AWS_ACCESS_KEY = "XXXXXXXXXXXXXXXXXXXX"
     AWS_SECRET_KEY = "XXXXXXXXXXXXXXXXXXXX"
 

@@ -77,5 +77,10 @@ Enter key passphrase when prompted
 Benchmarking results will be stored under `results/`
 
 
+# To-do list
+Prediction with LSTM and Arima
+Use CA VM 
+Larger test data size (10M)
+
 
 

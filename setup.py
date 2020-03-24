@@ -5,12 +5,12 @@ from Constants import Constants
 
 
 if __name__ == "__main__":
-    for i in range(len(Constants.NODE_HOSTS.value)):
+    for i in range(len(Constants.NODE_HOSTS_MULTIPLE_LOCAL_CLIENTS.value)):
         r = RemoteBenchMarker(
-            Constants.NODE_HOSTS.value[i],
-            Constants.NODE_PORTS.value[i],
+            Constants.NODE_HOSTS_MULTIPLE_LOCAL_CLIENTS.value[i],
+            Constants.NODE_PORTS_MULTIPLE_LOCAL_CLIENTS.value[i],
             Constants.USERNAME.value,
-            "/home/haotian/.ssh/id_geni_ssh_rsa",
+            "/Users/haotian/.ssh/id_geni_ssh_rsa",
             "123456"
         )
         r.exec_command([

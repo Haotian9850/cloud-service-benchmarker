@@ -115,11 +115,15 @@ if __name__ == "__main__":
     maker = FileMaker()
     runner = DownloadReqRunner()
     config = reader.read_config()
+    logging.info("Making test file of size {} kb...".format(config["file_size_kb"]))
     test_file = maker.make_test_file(
         config["file_size_kb"],
         TEST_FILE_PREFIX,
         TEST_FILE_PARENT_PATH,
     )
+    for bucket in config["buckets"]:
+        logging.info("Uploading test file {}...".format(test_file))
+        upload_test_file(bucket, test_file, TEST_FILE_PARENT_PATH)
     if not config["multi_local_clients"]:
         req_times = generate_job_times(config["start_time"], len(config["buckets"]), config["gap_sec"])
         for i in range(len(config["buckets"])):

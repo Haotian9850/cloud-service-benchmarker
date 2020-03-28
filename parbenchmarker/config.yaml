@@ -14,16 +14,16 @@ regions:
   - sa-east-1
   - ca-central-1
   - us-west-1
-file_size_kb: 10240
+file_size_kb: 102400
 username: hl7gr
 
 multi_local_clients: True 
 num_local_clients: 5
 
-start_time: "19:45:00"
-gap_sec: 120
+start_time: "21:15:00"
+gap_sec: 180
 between_req_sec: 2
-between_bucket_sec: 120
+between_bucket_sec: 180
 total_benchmarking_duration_sec: 86400
 
 

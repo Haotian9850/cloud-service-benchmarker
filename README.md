@@ -20,18 +20,17 @@ regions:
   - sa-east-1
   - ca-central-1
   - us-west-1
-file_size_kb: 1024
-node_ips:
-  - 127.0.0.1
-  - 127.0.0.2
-req_times:
-  - "19:03:00"
-  - "19:03:10"
-  - "19:03:20"
-  - "19:03:30"
-  - "19:03:40"
-  - "19:03:50"
-  - "19:03:00"
+file_size_kb: 10240
+username: YOUR_GENI_SSH_USERNAME
+
+multi_local_clients: True 
+num_local_clients: 5
+
+start_time: "19:45:00"  # must be local time
+gap_sec: 120            # time gap between every batch of requests
+between_req_sec: 2      # time gap between every successive request in the same batch 
+between_bucket_sec: 120 # time gap between every group of requests to the same S3 bucket
+total_benchmarking_duration_sec: 86400
 ```
 *Note that `req_times` must have a one-to-one mapping to `buckets` and are not timezone sensitive.*
 
@@ -40,18 +39,30 @@ Put sensitive config info in `Constants.py` in the following format:
 ```
 from enum import Enum 
 
+
 class Constants(Enum):
     BENCHMARKING_MULTIPLE_LOCAL_CLIENTS = True
-    AWS_ACCESS_KEY = "XXXXXXXXXXXXXXXXXXXX"
-    AWS_SECRET_KEY = "XXXXXXXXXXXXXXXXXXXX"
 
-    USERNAME = "hl7gr"  # your VM username
+    AWS_ACCESS_KEY = "AKIAJMIX4WZARFWJHSMQ"
+    AWS_SECRET_KEY = "xuqo/k/E4JnkkjQQBtFi4l6W3KzSbBbvndUnNCHr"
+
+    USERNAME = "hl7gr"
     NODE_HOSTS = [
-        "pc603.emulab.net",
+        "pc602.emulab.net",
         ...
     ]
     NODE_PORTS = [
-        26402,
+        26274,
+        ...
+    ]
+
+    NODE_HOSTS_MULTIPLE_LOCAL_CLIENTS = [   
+        "pc1.instageni.ucsd.edu",
+        ...
+    ]
+
+    NODE_PORTS_MULTIPLE_LOCAL_CLIENTS = [
+        25410,
         ...
     ]
 ```
@@ -75,12 +86,6 @@ $ python3 collect_results.py
 Enter key passphrase when prompted
 
 Benchmarking results will be stored under `results/`
-
-
-# To-do list
-Prediction with LSTM and Arima
-Use CA VM 
-Larger test data size (10M)
 
 
 

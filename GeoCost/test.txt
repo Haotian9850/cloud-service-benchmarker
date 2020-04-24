@@ -1,0 +1,119 @@
+ -> dict:
+                                if (
+                res.status_code == 200 and 
+                res_json.get("data") and 
+                res_json["da
+
+
+
+        self.logger = logging.getLogger("homepage")
+
+            return False
+        return True
+        return self.client.set(
+self.port = kwargs.get("port", Constants.REDIS_PORT.value)
+                    raw_clean = raw.replace(ne, "")
+                return {
+                    "ok": True,
+                    "query": {
+ta"][0].get("entities")
+            ):
+    ormat(
+                    Constants.SPACY_SERVER        result = 0
+        for index in [prefix + DateSerializer().get_todays_suffix() for prefix in Constants.NEWS_INDICES_PREFIX.value]:
+            print(index)
+
+        )            result += int(IndexDispatcher(self.hosts, index).get_index_size())
+        return result
+from constants import Constants
+self.logger = logging.getLogger(__name__)
+def count_news_ingested(self):
+class QueryInterpreter():
+    def __init__(self):
+                json={                    "query": {meout:
+     def flush(self):
+        self.logger.info("Flusing redis db...")
+        self.client.flushdb()  ),
+                                }
+
+        result = self.client.get(key)
+        if result:
+            return json.loads(result.decode("utf-8")
+
+            ex=exp_in_sec
+
+            self.host = kwargs.get("host", Constants.REDIS_HOST.value)
+        self.logger.error("Request to spacy server timed out...")
+
+ 
+                "value": raw,
+                "tags": [token.rstrip() for token in raw.split()],
+s.RequestException as e:
+            self.logger.error("Spacy server request error: {}".format(str(e)))
+    def look_up(self, key):
+        try:
+            res = requests.post(
+                url="http://{}:{}/ner".f
+                    "sections": [raw.rstrip()]
+
+            key,
+            json.dumps(content),
+self.db = kwargs.get("db", Constants.REDIS_DB.value)
+except requests.exceptions.Ti   def __init__(self, **kwargs):
+        except requests.exception
+    def count_news_sources(self):
+    def insert(self, key, content):
+        random.seed(time.time())
+        exp_in_sec = int(Constants.REDIS_EXP_SEC_BASE.value + random.random() * Constants.REDIS_EXP_SEC_BASE.value)
+                            Constants.SPACY_SERVER_PROT.value
+              _NAME.value,
+plit()],
+                nes = [entity["text"] for entity in res_json["data"][0])
+        return result 
+    
+
+    def interpret_query(self,             )
+            res_json = json.loads(res.text)
+                
+    def is_available(self):
+        try:    
+            self.client.ping()
+        except redis.exceptions.ConnectionError:
+                self.logger.info("Interpretating search query {}...".format(raw))
+
+class RedisConnector():
+                       "value": raw,
+                        "tags": nes + [token.strip().rstrip() for token in raw_clean.s
+        self.logger.debug("Cache expire in {}s...".format(
+
+["entities"] if entity["label"] in Constants.ACCEPT_NE_LABELS.value]
+                raw_clean = ""
+                for ne in nes: 
+                        "url": "#"
+                    }
+                }
+                "url": "#"import random
+import time
+
+
+
+class StatsFetcher():
+    def __init__(self, hosts):
+        self.hosts = hostsraw)
+        }
+        self.client = redis.Redis(
+            self.host,
+            self.port,
+            self.db
+        )
+        self.logger = logging.getLogger("homepage")
+                    exp_in_sec
+        ))
+        return len(Constants.AVAILABLE_SOURCES.value)
+
+        return {
+            "ok": False,
+
+            }import redis 
+import logging 
+import json 

@@ -14,7 +14,7 @@ regions:
   - sa-east-1
   - ca-central-1
   - us-west-1
-file_size_kb: 51200
+file_size_kb: 102400
 username: hl7gr
 
 multi_local_clients: True 

@@ -26,6 +26,7 @@ class FileSplitter(object):
         try:
             size_byte = os.path.getsize(path)
             partition_byte = size_byte // self.num_partitions
+            print(partition_byte)
         except OSError as e:
             self.logger.error("Cannot split file {}: {}".format(path, str(e)))
         with open(path, "rb") as fin:

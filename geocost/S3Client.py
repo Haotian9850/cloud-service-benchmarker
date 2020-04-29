@@ -4,16 +4,16 @@ import os
 import boto3
 from botocore.exceptions import ClientError
 from CloudStorageClient import CloudStorageClient
-from Constants import Constants
 
 
-class S3Uploader(CloudStorageClient):
+class S3Client(CloudStorageClient):
     def upload(self, path:str) -> bool:
         self._validate_path(path)
         partitions = self.fsplitter.split_and_save(path)
+        print(partitions)
         res = True
         for fpart in partitions:
-            res = self.upload("{}/{}".format(self.temp_path, fpart))
+            res = self._upload_single_file("{}/{}".format(self.temp_path, fpart))
         if not res:
             self.logger.warning("Some parition of file {} was not successfully uploaded to S3...".format(path))
         return res
@@ -31,10 +31,11 @@ class S3Uploader(CloudStorageClient):
         res = True 
         for bucket in self.data_centers:
             try:
-                res = self.client.upload_file(
+                self.logger.info("Uploading {} to {}...".format(fpath, bucket))
+                self.client.upload_file(
                     fpath,
                     bucket,
-                    os.path.basename(path)
+                    os.path.basename(fpath)
                 )
             except ClientError as e:
                 self.logger.error("Uploading of {} failed: {}".format(fpath, str(e)))

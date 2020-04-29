@@ -10,7 +10,6 @@ class S3Client(CloudStorageClient):
     def upload(self, path:str) -> bool:
         self._validate_path(path)
         partitions = self.fsplitter.split_and_save(path)
-        print(partitions)
         res = True
         for fpart in partitions:
             res = self._upload_single_file("{}/{}".format(self.temp_path, fpart))
@@ -18,12 +17,29 @@ class S3Client(CloudStorageClient):
             self.logger.warning("Some parition of file {} was not successfully uploaded to S3...".format(path))
         return res
 
-
-    def download(self, path:str, download_patterns:dict):
+    '''
+    @ PARAMS:
+    download_patterns:[(bucket, partition_number),...]
+    '''
+    def download(self, fname:str, target_path:str, download_patterns:dict):
+        self._validate_download_pattern(download_patterns)
         if not self.client:
-            self.client = boto3.client("s3")
+            self.client = self._get_s3_client()
         for pattern in download_patterns:
-            pass
+            self.logger.info("Downloading parition {} from {}...".format(pattern[1], pattern[0]))
+            self.client.download_file(
+                pattern[0],
+                "{}_{}".format(fname, pattern[1]),
+                "{}/{}_{}".format(self.temp_path, fname, pattern[1])
+            )
+        self.logger.info("Merging partitions...")
+        self.fappender.merge_partitions(
+            filename=fname,
+            target_path=target_path
+        )
+        self.logger.info("{} partitions successfully merged...".format(len(download_patterns)))
+        
+            
 
     def _upload_single_file(self, fpath) -> bool:
         if not self.client:

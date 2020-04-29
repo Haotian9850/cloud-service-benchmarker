@@ -1,5 +1,6 @@
 import logging
 import os
+import math
 
 class FileSplitter(object):
     def __init__(self, **kwargs):
@@ -25,8 +26,7 @@ class FileSplitter(object):
         partition_byte = -1
         try:
             size_byte = os.path.getsize(path)
-            partition_byte = size_byte // self.num_partitions
-            print(partition_byte)
+            partition_byte = math.ceil(size_byte / self.num_partitions)
         except OSError as e:
             self.logger.error("Cannot split file {}: {}".format(path, str(e)))
         with open(path, "rb") as fin:
@@ -37,10 +37,4 @@ class FileSplitter(object):
                     fout.write(raw_bytes[i : i + partition_byte])
                 result.append("{}_{}".format(self._get_filename(path), p))
         return result
-
-
-if __name__ == "__main__":
-    f = FileSplitter()
-    f.split_and_save("test.txt")
-        
-        
+ 

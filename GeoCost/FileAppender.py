@@ -8,19 +8,14 @@ class FileAppender(object):
         self.temp_path = kwargs.get("temp_path", "./temp")
         self.logger = logging.getLogger(__name__)
 
-    def get_file(self, filename):
-        pass 
-
-    def _merge_partitions(self, filename):
-        partitions = ["{}_{}.{}".format(
+    def merge_partitions(self, filename:str, target_path:str):
+        partitions = ["{}_{}".format(
             os.path.basename(filename),
             i,
             os.path.splitext(filename)[1]
         ) for i in range(self.num_partitions)]
-        with open(filename, "w+") as fin:
+        with open(target_path, "w+") as fin:
             for partition in partitions:
-                with open("{}/{}".format(self.temp_path, partition)) as fout:
+                with open("{}/{}".format(self.temp_path, partition), "r") as fout:
                     for line in fout:
-                        fout.write(line)
-    
-
+                        fin.write(line)

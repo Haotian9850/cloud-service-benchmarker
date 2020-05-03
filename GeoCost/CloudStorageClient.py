@@ -42,5 +42,9 @@ class CloudStorageClient(object):
         if not self.secret_key:
             raise ValueError("Secret key not set!")
 
+    def _validate_download_pattern(self, raw:list):
+        if len(raw) != self.fsplitter.num_partitions:
+            raise ValueError("Invalid download pattern shape: {}".format(len(raw)))
+
         
 

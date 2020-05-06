@@ -3,7 +3,7 @@ import os
 
 import boto3
 from botocore.exceptions import ClientError
-from CloudStorageClient import CloudStorageClient
+from geocost.CloudStorageClient import CloudStorageClient
 
 
 class S3Client(CloudStorageClient):

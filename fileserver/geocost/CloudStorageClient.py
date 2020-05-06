@@ -1,13 +1,12 @@
 import logging
 import os
 
-from FileSplitter import FileSplitter
-from FileAppender import FileAppender
+from geocost.FileSplitter import FileSplitter
+from geocost.FileAppender import FileAppender
 
 
 class CloudStorageClient(object):
     def __init__(self, **kwargs):
-        self.service = kwargs.get("service", None)
         self.data_centers = kwargs.get("data_centers", list())
         self.client = None
         self.temp_path = kwargs.get("temp_path", "./temp")

@@ -15,10 +15,10 @@ from sklearn.svm import SVC
 from sklearn.metrics import make_scorer
 import numpy as np
 
-TEST_CSV = "/Users/haotian/Documents/documents-local/cloud-service-benchmarker/results_multi_local_clients_multiple_bucket/ucsd_geni/168_hr/results_pc2.instageni.ucsd.edu_25410_102400kb.csv"
+TEST_CSV = "/Users/haotian/Documents/documents-local/cloud-service-benchmarker/results_multi_local_clients_multiple_bucket/ucsd_geni/batch_2/results_pc1.instageni.ucsd.edu_25410_51200kb.csv"
 
 
-BUCKET = "hao-eu-west-2"
+BUCKET = "hao-us-east-1"
 
 def parse_time(raw):
     return datetime.strptime(raw, "%Y-%m-%d %H:%M:%S.%f")
@@ -58,7 +58,7 @@ if __name__ == "__main__":
         date_parser=parse_time,
         skiprows=5
     )
-    raw = raw.head(2000)    # crop garbage data
+    raw.drop(raw[raw.bucket != BUCKET].index, inplace=True)
     raw["time"] = raw["time"].map(lambda x : get_total_sec(x))
     X = raw.drop(columns=["result"])
     y = raw["result"]
@@ -71,7 +71,6 @@ if __name__ == "__main__":
         ]), ["time"])
     ])
     '''
-    #dataset_ready = pipeline.fit_transform(X)
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, shuffle=False)
     clf = linear_model.BayesianRidge()
     clf.fit(X_train, y_train)
@@ -95,5 +94,6 @@ if __name__ == "__main__":
     )
     plt.xlabel("Month-based time (s)")
     plt.ylabel("Latency (s)")
+    plt.savefig("batch_2.png")
     plt.legend(loc='upper left', borderaxespad=0.)
     plt.show()

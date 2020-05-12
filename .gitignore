@@ -3,6 +3,7 @@ Constants.*
 test.py 
 test.*
 configs.py
+*.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -15,7 +15,7 @@ def upload_test():
     res = requests.post(
         url=BASE_URL + "upload",
         files={
-            "file": open("./test_files/10mb.txt", "rb")
+            "file": open("./test_files/50mb.txt", "rb")
         },
         data={
 
@@ -25,7 +25,7 @@ def upload_test():
 
 def download_test_split():
     start = time.time()
-    res = requests.get(BASE_URL + "download/10mb.txt")
+    res = requests.get(BASE_URL + "download/50mb.txt")
     if res.text:
         print("Downloading test complete...")
     end = time.time()
@@ -47,7 +47,7 @@ def download_test_single(fpath, upload=False):
     start = time.time()
     client.download_file(
         BUCKET,
-        "10mb.txt",
+        "50mb.txt",
         "./dump/dump.txt"
     )
     end = time.time()
@@ -58,16 +58,15 @@ def download_test_single(fpath, upload=False):
 
 
 if __name__ == "__main__":
-    
+    '''
     upload_test()
     temp = list()
     for i in range(100):
         temp.append(download_test_split())
     print(str(temp))
     '''
-    download_test_single("./test_files/10mb.txt", upload=True)
+    download_test_single("./test_files/50mb.txt", upload=True)
     temp = list()
     for i in range(100):
-        temp.append(download_test_single("./test_files/10mb.txt"))
+        temp.append(download_test_single("./test_files/50mb.txt"))
     print(str(temp))
-    '''

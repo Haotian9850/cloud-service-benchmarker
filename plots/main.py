@@ -38,6 +38,11 @@ def plot_single_bucket():
     data_50mb_clean = extract_single_bucket(DATA_50MB)
     data_75mb_clean = extract_single_bucket(DATA_75MB)
     data_100mb_clean = extract_single_bucket(DATA_100MB)
+    '''
+    data_50mb_clean.to_csv("data_50mb_clean.csv")
+    data_75mb_clean.to_csv("data_75mb_clean.csv")
+    data_100mb_clean.to_csv("data_100mb_clean.csv")
+    '''
     fig = data_50mb_clean.plot(
         title="Time-series latency of different file sizes",
         figsize=(15, 10),
@@ -69,6 +74,7 @@ def plot_all_buckets_single_client_avg():
         "75 MB": means_75mb,
         "100 MB": means_100mb
     }, index=index)
+    df.to_csv("all_buckets_avg_single_client.csv")
     fig = df.plot.bar(
         rot=0,
         title="Averge download latency of all major S3 datacenters",
@@ -90,6 +96,7 @@ def plot_all_buckets_avg():
         "75 MB": means_75mb,
         "100 MB": means_100mb
     }, index=index)
+    #df.to_csv("all_buckets_avg.csv")
     fig = df.plot.bar(
         rot=0,
         title="Averge download latency of all major S3 datacenters (5 concurrent client requests)",
@@ -105,4 +112,4 @@ def plot_all_buckets_avg():
 if __name__ == "__main__":
     #plot_single_bucket()
     #plot_all_buckets_avg()
-    plot_all_buckets_single_client_avg()
+    #plot_all_buckets_single_client_avg()

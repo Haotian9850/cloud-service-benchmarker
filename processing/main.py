@@ -103,6 +103,11 @@ if __name__ == "__main__":
     err_bars = np.linspace(0, round(errs[-1]), num=round(errs[-1]) * 10 + 1).tolist()
     cdf_data = get_cdf(errs, err_bars)
     print(cdf_data)
+    df = pd.DataFrame({
+        "Cumulative probability": cdf_data[1],
+        "Absolute latency prediction error (s)": cdf_data[0]
+    })
+    df.to_csv("cdf.csv")
     plt.figure(figsize=(15, 10))
     plt.plot(cdf_data[0], cdf_data[1],)
     plt.title("CDF for absolute latency prediction error (linear regression)")

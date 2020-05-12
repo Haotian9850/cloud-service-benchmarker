@@ -1,5 +1,6 @@
 import logging
 import os
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 import boto3
 from botocore.exceptions import ClientError
@@ -25,6 +26,18 @@ class S3Client(CloudStorageClient):
         self._validate_download_pattern(download_patterns)
         if not self.client:
             self.client = self._get_s3_client()
+        with ThreadPoolExecutor(max_workers=12) as t:
+            all_jobs = [
+                t.submit(
+                    self.client.download_file,
+                    Key="{}_{}".format(fname, pattern[1]),
+                    Filename="{}/{}_{}".format(self.temp_path, fname, pattern[1]),
+                    Bucket=pattern[0]
+                ) for pattern in download_patterns
+            ]
+        for _ in as_completed(all_jobs):
+            self.logger.info("Download task completed...")
+        '''
         for pattern in download_patterns:
             self.logger.info("Downloading parition {} from {}...".format(pattern[1], pattern[0]))
             self.client.download_file(
@@ -32,6 +45,7 @@ class S3Client(CloudStorageClient):
                 "{}_{}".format(fname, pattern[1]),
                 "{}/{}_{}".format(self.temp_path, fname, pattern[1])
             )
+        '''
         self.logger.info("Merging partitions...")
         self.fappender.merge_partitions(
             filename=fname,

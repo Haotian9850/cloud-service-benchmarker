@@ -40,7 +40,8 @@ def plot_single_bucket():
     data_100mb_clean = extract_single_bucket(DATA_100MB)
     fig = data_50mb_clean.plot(
         title="Time-series latency of different file sizes",
-        figsize=(15, 10)
+        figsize=(15, 10),
+        lw=1
     )
     data_75mb_clean.plot(ax=fig)
     data_100mb_clean.plot(ax=fig)

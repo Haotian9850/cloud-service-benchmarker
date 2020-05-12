@@ -1,0 +1,52 @@
+}}
+
+body {
+  font-family: "Mukta Mahee", sans-serif;
+  font-size: 14px;
+  background-color: #222627;
+  color: #a6a6a6; 
+}
+
+.sidebar-area {
+  z-index: inherit !important;
+}
+    background-color: #0a0a0a !important;
+}
+
+body {
+    overflow-x: hidden !important;
+
+    cursor: pointer;
+    color: #db4437 !important;
+}
+
+.list-group-item-hoverable-selected {
+    cursor: pointer;
+    background-color: #343a40;
+    color: #FFFFFF;
+}
+
+#sidebar-wrapper {
+min-height: 100vh;
+margin-left: -20rem;
+-webkit-transition: margin .25s ease-out;
+-moz-transition: margin .25s ease-out;
+-o-transition: margin .25s ease-out;
+transition: margin .25s ease-out;
+background-color: #191c1d;
+}
+
+#sidebar-wrapper .list-group {
+width: 20rem;
+}
+
+#page-content-wrapper {
+min-width: 100vw;
+}
+
+#wrapper.toggled #sidebar-wrapper {
+margin-left: 0;
+}
+
+@media (min-width: 768px){
+    #sidebar-wr

@@ -17,7 +17,6 @@ import numpy as np
 
 TEST_CSV = "/Users/haotian/Documents/documents-local/cloud-service-benchmarker/results_multi_local_clients_multiple_bucket/ucsd_geni/batch_2/results_pc1.instageni.ucsd.edu_25410_51200kb.csv"
 
-
 BUCKET = "hao-us-east-1"
 
 def parse_time(raw):
@@ -38,6 +37,26 @@ def get_total_sec(raw_time)->int:
 # within 5% of ground truth
 def custom_loss_func(true, pred):
     return abs(pred - true) < 0.05 * true
+
+def get_error(true:list, pred:list) -> list:
+    result = list()
+    for i, _ in enumerate(true):
+        result.append(abs(true[i] - pred[i]))
+    return result
+
+# returns a nested list
+def get_cdf(errs:list, err_bars:list) -> list:
+    result = [list(), list()]
+    for err_bar in err_bars:
+        temp = 0
+        for err in errs:
+            if err <= err_bar:
+                temp += 1
+        result[0].append(err_bar)
+        result[1].append(temp / len(errs))
+    return result
+
+
 
 def custom_score(y_test, y_pred):
     if len(y_pred) != len(y_test):
@@ -60,6 +79,7 @@ if __name__ == "__main__":
     )
     raw.drop(raw[raw.bucket != BUCKET].index, inplace=True)
     raw["time"] = raw["time"].map(lambda x : get_total_sec(x))
+    raw.drop(raw[raw.time >= 2000000].index, inplace=True)
     X = raw.drop(columns=["result"])
     y = raw["result"]
     X = pd.get_dummies(X)
@@ -76,24 +96,39 @@ if __name__ == "__main__":
     clf.fit(X_train, y_train)
     y_pred = clf.predict(X_test)
     print(custom_score(np.array(y_test).tolist(), np.array(y_pred).tolist()))
-
+    errs = sorted(get_error(
+        np.array(y_test).tolist(),
+        np.array(y_pred).tolist()
+    ))
+    err_bars = np.linspace(0, round(errs[-1]), num=round(errs[-1]) * 10 + 1).tolist()
+    cdf_data = get_cdf(errs, err_bars)
+    print(cdf_data)
+    plt.figure(figsize=(15, 10))
+    plt.plot(cdf_data[0], cdf_data[1],)
+    plt.title("CDF for absolute latency prediction error (linear regression)")
+    plt.xlabel("Absolute latency prediction error (s)")
+    plt.ylabel("Cumulative probability distribution")
+    plt.savefig("cdf.png")
+    plt.show()
+    '''
     plt.plot(
         np.array(X_train["time"]).tolist(), 
         np.array(y_train).tolist(),
-        label="X_train"
-    )
-    plt.plot(
-        np.array(X_test["time"]).tolist(), 
-        np.array(y_pred).tolist(),
-        label="prediction"
+        label="X_train",
     )
     plt.plot(
         np.array(X_test["time"]).tolist(), 
         np.array(y_test).tolist(),
         label="ground_truth"
     )
+    plt.plot(
+        np.array(X_test["time"]).tolist(), 
+        np.array(y_pred).tolist(),
+        label="prediction"
+    )
     plt.xlabel("Month-based time (s)")
     plt.ylabel("Latency (s)")
     plt.savefig("batch_2.png")
     plt.legend(loc='upper left', borderaxespad=0.)
     plt.show()
+    '''

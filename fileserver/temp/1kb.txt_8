@@ -1,0 +1,5 @@
+apper {
+        margin-left: 0;}
+    #page-content-wrapper{
+        min-width: 0;
+    

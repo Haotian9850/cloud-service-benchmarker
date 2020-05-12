@@ -1,0 +1,7 @@
+elected {
+    cursor: pointer;
+    background-color: #343a40;
+    color: #FFFFFF;
+}
+
+#

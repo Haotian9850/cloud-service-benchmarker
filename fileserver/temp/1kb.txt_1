@@ -1,0 +1,7 @@
+;
+
+    cursor: pointer;
+    color: #db4437 !important;
+}
+
+.list-group-item-hoverable-s

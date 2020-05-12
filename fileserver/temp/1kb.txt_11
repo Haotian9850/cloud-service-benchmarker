@@ -1,0 +1,8 @@
+lor: #222627;
+  color: #a6a6a6; 
+}
+
+.sidebar-area {
+  z-index: inherit !important;
+}
+
